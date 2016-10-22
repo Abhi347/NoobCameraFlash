@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">NoobCameraFlash</string>
+    <string name="perm_lab_flashlight">Allow Camera Flash Permission</string>
+    <string name="perm_desc_flashlight">Camera Flash permission is required for Torch feature to work.</string>
+</resources>
