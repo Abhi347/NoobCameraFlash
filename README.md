@@ -1,5 +1,7 @@
 [![AUR](https://img.shields.io/aur/license/yaourt.svg?maxAge=2592000)](https://raw.githubusercontent.com/Abhi347/NoobCameraFlash/master/LICENSE) 
 [![](https://jitpack.io/v/Abhi347/NoobCameraFlash.svg)](https://jitpack.io/#Abhi347/NoobCameraFlash)
+[![Build Status](https://travis-ci.org/Abhi347/NoobCameraFlash.svg?branch=master)](https://travis-ci.org/Abhi347/NoobCameraFlash)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/27c70f649c444bd48f0b996b952f89c1)](https://www.codacy.com/app/josh-abhi143/NoobCameraFlash?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Abhi347/NoobCameraFlash&amp;utm_campaign=Badge_Grade)
 
 # NoobCameraFlash
 An Android library to access Camera Flash in all the versions of Android. It takes care of the permissions and can also work in different flavor of Android OS.
