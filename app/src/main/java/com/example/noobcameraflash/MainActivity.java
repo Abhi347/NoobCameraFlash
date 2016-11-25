@@ -11,6 +11,7 @@ import com.noob.noobcameraflash.managers.NoobCameraManager;
 public class MainActivity extends AppCompatActivity {
 
     TextView mStatusTextView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,18 +36,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onFlashToggleClick(View view) {
-        if(NoobCameraManager.getInstance().isFlashOn()){
-            NoobCameraManager.getInstance().turnOffFlash();
-        }else{
-            NoobCameraManager.getInstance().turnOnFlash();
-        }
+        NoobCameraManager.getInstance().toggleFlash();
         updateStatus();
     }
 
-    private void updateStatus(){
-        if(NoobCameraManager.getInstance().isFlashOn()){
+    private void updateStatus() {
+        if (NoobCameraManager.getInstance().isFlashOn()) {
             mStatusTextView.setText("Current Flash Status: On");
-        }else{
+        } else {
             mStatusTextView.setText("Current Flash Status: Off");
         }
     }

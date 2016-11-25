@@ -61,6 +61,14 @@ public class NoobCameraManager {
         mCameraUtil.turnOffFlash();
     }
 
+    public void toggleFlash(){
+        if(isFlashOn()){
+            turnOffFlash();
+        }else{
+            turnOnFlash();
+        }
+    }
+
     public void setLogLevel(LogLevel logLevel) {
         LumberJack.setLogLevel(logLevel);
     }
