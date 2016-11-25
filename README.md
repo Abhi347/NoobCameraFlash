@@ -28,7 +28,7 @@ Step 1. Add the JitPack repository to your build file. Add it in your root build
 Step 2. Add the dependency
 
     dependencies {
-	        compile 'com.github.Abhi347:NoobCameraFlash:0.0.1'
+	        compile 'com.github.Abhi347:NoobCameraFlash:0.0.2'
 	  }
 
 ## Usage
@@ -51,11 +51,7 @@ You can take care of the runtime permission to access Camera yourself or can all
     
 It's easy to toggle Flash too
 
-    if(NoobCameraManager.getInstance().isFlashOn()){
-        NoobCameraManager.getInstance().turnOffFlash();
-    }else{
-        NoobCameraManager.getInstance().turnOnFlash();
-    }
+    NoobCameraManager.getInstance().toggleFlash();
 
 ## Contributions
 Feel free to report bugs, feedback or even suggest new features. I'd love to make it a great library.
