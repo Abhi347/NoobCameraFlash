@@ -8,4 +8,6 @@ public interface CameraFlashUtility {
     void turnOnFlash();
     void turnOffFlash();
     void refreshPermissions();
+    void setTorchModeCallback(TorchModeCallback torchModeCallback);
+    void release();
 }
