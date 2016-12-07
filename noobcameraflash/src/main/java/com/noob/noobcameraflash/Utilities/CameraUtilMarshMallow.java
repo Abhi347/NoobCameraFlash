@@ -53,7 +53,7 @@ public class CameraUtilMarshMallow extends BaseCameraUtil {
     }
 
     private boolean isFlashAvailable() throws CameraAccessException {
-        CameraCharacteristics cameraCharacteristics = getCameraManager().getCameraCharacteristics("0");
+        CameraCharacteristics cameraCharacteristics = mCameraManager.getCameraCharacteristics("0");
         return cameraCharacteristics.get(CameraCharacteristics.FLASH_INFO_AVAILABLE);
     }
 
