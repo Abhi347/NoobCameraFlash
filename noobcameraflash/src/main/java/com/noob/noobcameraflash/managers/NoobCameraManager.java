@@ -46,7 +46,7 @@ public class NoobCameraManager {
     }
 
     public void takePermissions() {
-        mCameraUtil.refreshPermissions();
+        mCameraUtil.takePermissions();
     }
 
     public boolean isFlashOn() {
@@ -71,5 +71,10 @@ public class NoobCameraManager {
 
     public void setLogLevel(LogLevel logLevel) {
         LumberJack.setLogLevel(logLevel);
+    }
+
+    public void release() {
+        if (mCameraUtil != null)
+            mCameraUtil.release();
     }
 }
