@@ -9,39 +9,25 @@ import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCharacteristics;
 import android.hardware.camera2.CameraManager;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-
-import java.util.ArrayList;
 
 /**
  * Created by Abhishek on 28-11-2015.
  */
+@SuppressWarnings("ConstantConditions")
 @TargetApi(Build.VERSION_CODES.M)
-public class CameraUtilMarshMallow implements CameraFlashUtility {
-
-    public enum TorchMode {
-        UNAVAILABLE,
-        SWITCHED_ON,
-        SWITCHED_OFF
-    }
-
-    public interface TorchModeCallback {
-        void onTorchModeChanged(TorchMode status);
-    }
-
+public class CameraUtilMarshMallow extends BaseCameraUtil {
     private CameraManager mCameraManager;
-    private Activity mContext;
-    private boolean isCameraPermissionGranted = false;
+    CameraManager.TorchCallback mTorchCallback;
 
-    private boolean torchModeOn = false;
-    private TorchModeCallback mTorchModeCallback;
 
     public CameraUtilMarshMallow(Activity context) {
-        mContext = context;
+        super(context);
         try {
             mCameraManager = (CameraManager) context.getSystemService(Context.CAMERA_SERVICE);
             checkCameraPermission(context);
-            openCamera(mContext);
+            openCamera(context);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -49,33 +35,30 @@ public class CameraUtilMarshMallow implements CameraFlashUtility {
 
     private void openCamera(Activity context) throws CameraAccessException {
         checkCameraPermission(context);
-        if (isCameraPermissionGranted) {
-            mCameraManager.registerTorchCallback(new CameraManager.TorchCallback() {
+        if (isCameraPermissionGranted()) {
+            mTorchCallback = new CameraManager.TorchCallback() {
                 @Override
-                public void onTorchModeUnavailable(String cameraId) {
+                public void onTorchModeUnavailable(@NonNull String cameraId) {
                     super.onTorchModeUnavailable(cameraId);
-                    mTorchModeCallback.onTorchModeChanged(TorchMode.UNAVAILABLE);
+                    onCameraTorchModeChanged(TorchMode.Unavailable);
                 }
 
                 @Override
-                public void onTorchModeChanged(String cameraId, boolean enabled) {
+                public void onTorchModeChanged(@NonNull String cameraId, boolean enabled) {
                     super.onTorchModeChanged(cameraId, enabled);
-                    torchModeOn = enabled;
-                    if (mTorchModeCallback != null) {
-                        if (torchModeOn)
-                            mTorchModeCallback.onTorchModeChanged(TorchMode.SWITCHED_ON);
-                        else
-                            mTorchModeCallback.onTorchModeChanged(TorchMode.SWITCHED_OFF);
-                    }
+                    if (enabled)
+                        setTorchMode(TorchMode.SwitchedOn);
+                    else
+                        setTorchMode(TorchMode.SwitchedOff);
                 }
-            }, null);
+            };
+            mCameraManager.registerTorchCallback(mTorchCallback, null);
         }
     }
 
     private boolean isFlashAvailable() throws CameraAccessException {
         CameraCharacteristics cameraCharacteristics = mCameraManager.getCameraCharacteristics("0");
-        boolean flashAvailable = cameraCharacteristics.get(CameraCharacteristics.FLASH_INFO_AVAILABLE);
-        return flashAvailable;
+        return cameraCharacteristics.get(CameraCharacteristics.FLASH_INFO_AVAILABLE);
     }
 
     public void checkCameraPermission(Activity context) throws CameraAccessException {
@@ -89,14 +72,10 @@ public class CameraUtilMarshMallow implements CameraFlashUtility {
                     return;
                 }
             }
-            isCameraPermissionGranted = true;
+            setCameraPermissionGranted(true);
         }
     }
 
-    @Override
-    public boolean isFlashOn() {
-        return false;
-    }
 
     @Override
     public void turnOnFlash() {
@@ -105,7 +84,8 @@ public class CameraUtilMarshMallow implements CameraFlashUtility {
             for (String id : cameraIds) {
                 CameraCharacteristics characteristics = mCameraManager.getCameraCharacteristics(id);
                 if (characteristics.get(CameraCharacteristics.FLASH_INFO_AVAILABLE)) {
-
+                    mCameraManager.setTorchMode(id, true);
+                    setTorchMode(TorchMode.SwitchedOn);
                 }
             }
         } catch (CameraAccessException e) {
@@ -115,26 +95,25 @@ public class CameraUtilMarshMallow implements CameraFlashUtility {
 
     @Override
     public void turnOffFlash() {
-
-    }
-
-    @Override
-    public void refreshPermissions() {
         try {
-            ArrayList<String> mCameraIds = new ArrayList<>();
             String[] cameraIds = mCameraManager.getCameraIdList();
             for (String id : cameraIds) {
                 CameraCharacteristics characteristics = mCameraManager.getCameraCharacteristics(id);
                 if (characteristics.get(CameraCharacteristics.FLASH_INFO_AVAILABLE)) {
-
+                    mCameraManager.setTorchMode(id, false);
+                    setTorchMode(TorchMode.SwitchedOff);
                 }
             }
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        } catch (CameraAccessException e) {
+            e.printStackTrace();
         }
     }
 
-    public void setTorchModeCallback(TorchModeCallback torchModeCallback) {
-        mTorchModeCallback = torchModeCallback;
+    @Override
+    public void release() {
+        if(mCameraManager!=null){
+            mCameraManager.unregisterTorchCallback(mTorchCallback);
+            mCameraManager = null;
+        }
     }
 }
