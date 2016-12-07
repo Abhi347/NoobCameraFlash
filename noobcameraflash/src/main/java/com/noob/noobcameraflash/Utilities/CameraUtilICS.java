@@ -12,9 +12,9 @@ import java.util.List;
  */
 @SuppressWarnings("deprecation")
 public class CameraUtilICS extends BaseCameraUtil {
-    Camera mCamera;
-    Camera.Parameters cameraParameters;
-    List<String> flashModes;
+    private Camera mCamera;
+    private Camera.Parameters cameraParameters;
+    private List<String> flashModes;
 
     public CameraUtilICS(Activity context) {
         super(context);

@@ -47,6 +47,11 @@ public abstract class BaseCameraUtil implements CameraFlashUtility {
     //endregion
 
     //region Accessors
+
+    public Activity getContext() {
+        return mContext;
+    }
+
     public TorchMode getTorchMode() {
         return mTorchMode;
     }

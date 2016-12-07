@@ -37,7 +37,6 @@ public class CameraUtilLollipop extends BaseCameraUtil {
     public CameraUtilLollipop(Activity context) {
         super(context);
         try {
-            mCameraManager = (CameraManager) context.getSystemService(Context.CAMERA_SERVICE);
             openCamera(context);
         } catch (Exception e) {
             e.printStackTrace();
@@ -47,13 +46,15 @@ public class CameraUtilLollipop extends BaseCameraUtil {
     private void openCamera(Activity context) throws CameraAccessException {
         checkCameraPermission(context);
         if (isCameraPermissionGranted()) {
+            if (mCameraManager == null)
+                mCameraManager = (CameraManager) getContext().getSystemService(Context.CAMERA_SERVICE);
             mCameraManager.openCamera("0", new CameraDeviceStateCallback(), null);
         }
     }
 
 
     private boolean isFlashAvailable() throws CameraAccessException {
-        CameraCharacteristics cameraCharacteristics = mCameraManager.getCameraCharacteristics("0");
+        CameraCharacteristics cameraCharacteristics = getCameraManager().getCameraCharacteristics("0");
         return cameraCharacteristics.get(CameraCharacteristics.FLASH_INFO_AVAILABLE);
     }
 
@@ -132,7 +133,7 @@ public class CameraUtilLollipop extends BaseCameraUtil {
 
 
     private Size getSmallestSize(String cameraId) throws CameraAccessException {
-        Size[] outputSizes = mCameraManager.getCameraCharacteristics(cameraId)
+        Size[] outputSizes = getCameraManager().getCameraCharacteristics(cameraId)
                 .get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP)
                 .getOutputSizes(SurfaceTexture.class);
         if (outputSizes == null || outputSizes.length == 0) {
@@ -171,6 +172,9 @@ public class CameraUtilLollipop extends BaseCameraUtil {
 
     @Override
     public void release() {
+        if (mCameraManager != null) {
+            mCameraManager = null;
+        }
         if (mCameraDevice == null || mSession == null) {
             return;
         }
@@ -179,4 +183,19 @@ public class CameraUtilLollipop extends BaseCameraUtil {
         mCameraDevice = null;
         mSession = null;
     }
+
+    //region Accessors
+
+    public CameraManager getCameraManager() {
+        if (mCameraManager == null) {
+            try {
+                openCamera(getContext());
+            } catch (CameraAccessException e) {
+                e.printStackTrace();
+            }
+        }
+        return mCameraManager;
+    }
+
+    //endregion
 }
