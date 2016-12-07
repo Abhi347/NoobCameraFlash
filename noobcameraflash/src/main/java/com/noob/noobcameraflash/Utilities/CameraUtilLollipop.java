@@ -41,10 +41,11 @@ public class CameraUtilLollipop extends BaseCameraUtil {
     }
 
     private void openCamera(Activity context) throws CameraAccessException {
+        if (mCameraManager == null)
+            mCameraManager = (CameraManager) getContext().getSystemService(Context.CAMERA_SERVICE);
         checkCameraPermission(context);
         if (isCameraPermissionGranted()) {
-            if (mCameraManager == null)
-                mCameraManager = (CameraManager) getContext().getSystemService(Context.CAMERA_SERVICE);
+
             mCameraManager.openCamera("0", new CameraDeviceStateCallback(), null);
         }
     }

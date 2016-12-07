@@ -28,10 +28,11 @@ public class CameraUtilMarshMallow extends BaseCameraUtil {
     }
 
     private void openCamera(Activity context) throws CameraAccessException {
+        if (mCameraManager == null)
+            mCameraManager = (CameraManager) getContext().getSystemService(Context.CAMERA_SERVICE);
         checkCameraPermission(context);
         if (isCameraPermissionGranted()) {
-            if (mCameraManager == null)
-                mCameraManager = (CameraManager) getContext().getSystemService(Context.CAMERA_SERVICE);
+
             mTorchCallback = new CameraManager.TorchCallback() {
                 @Override
                 public void onTorchModeUnavailable(@NonNull String cameraId) {

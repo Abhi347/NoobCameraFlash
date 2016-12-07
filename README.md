@@ -28,7 +28,7 @@ Step 1. Add the JitPack repository to your build file. Add it in your root build
 Step 2. Add the dependency
 
     dependencies {
-	        compile 'com.github.Abhi347:NoobCameraFlash:0.1.1'
+	        compile 'com.github.Abhi347:NoobCameraFlash:0.1.2'
 	  }
 
 ## Usage
