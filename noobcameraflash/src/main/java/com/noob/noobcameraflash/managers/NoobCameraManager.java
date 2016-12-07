@@ -73,6 +73,7 @@ public class NoobCameraManager {
         LumberJack.setLogLevel(logLevel);
     }
 
+    //May or may not release all resources
     public void release() {
         if (mCameraUtil != null)
             mCameraUtil.release();
