@@ -7,7 +7,7 @@ public interface CameraFlashUtility {
     boolean isFlashOn();
     void turnOnFlash();
     void turnOffFlash();
-    void refreshPermissions();
+    void takePermissions();
     void setTorchModeCallback(TorchModeCallback torchModeCallback);
     void release();
 }

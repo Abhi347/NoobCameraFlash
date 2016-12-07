@@ -1,12 +1,17 @@
 package com.noob.noobcameraflash.Utilities;
 
+import android.Manifest;
 import android.app.Activity;
+import android.content.pm.PackageManager;
+import android.os.Build;
+import android.support.v4.app.ActivityCompat;
 
 /**
  * Created by Abhishek on 08-12-2016.
  */
 
 public abstract class BaseCameraUtil implements CameraFlashUtility {
+    public static final int CAMERA_PERMISSION_REQUEST_CODE = 1337;
     private Activity mContext;
     private boolean isCameraPermissionGranted = false;
 
@@ -32,8 +37,16 @@ public abstract class BaseCameraUtil implements CameraFlashUtility {
     }
 
     @Override
-    public void refreshPermissions() {
-        //Do Nothing as of now
+    public void takePermissions() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                String permissions[] = {Manifest.permission.CAMERA};
+
+                getContext().requestPermissions(permissions, CAMERA_PERMISSION_REQUEST_CODE);
+                return;
+            }
+        }
+        setCameraPermissionGranted(true);
     }
     //endregion
 

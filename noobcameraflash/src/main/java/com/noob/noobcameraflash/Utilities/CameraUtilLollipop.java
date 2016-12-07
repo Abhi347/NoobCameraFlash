@@ -1,10 +1,8 @@
 package com.noob.noobcameraflash.Utilities;
 
-import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.graphics.SurfaceTexture;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCaptureSession;
@@ -15,7 +13,6 @@ import android.hardware.camera2.CameraMetadata;
 import android.hardware.camera2.CaptureRequest;
 import android.os.Build;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.util.Size;
 import android.view.Surface;
 
@@ -61,15 +58,7 @@ public class CameraUtilLollipop extends BaseCameraUtil {
     public void checkCameraPermission(Activity context) throws CameraAccessException {
         boolean flashAvailable = isFlashAvailable();
         if (flashAvailable) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if (ActivityCompat.checkSelfPermission(context, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                    String permissions[] = {Manifest.permission.CAMERA};
-
-                    context.requestPermissions(permissions, 100);
-                    return;
-                }
-            }
-            setCameraPermissionGranted(true);
+            takePermissions();
         }
     }
 
