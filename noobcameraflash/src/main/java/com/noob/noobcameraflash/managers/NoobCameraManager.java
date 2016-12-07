@@ -36,7 +36,7 @@ public class NoobCameraManager {
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             mCameraUtil = new CameraUtilLollipop(activity);
         } else {
-            mCameraUtil = new CameraUtilICS();
+            mCameraUtil = new CameraUtilICS(activity);
         }
         setLogLevel(logLevel);
     }
@@ -61,10 +61,10 @@ public class NoobCameraManager {
         mCameraUtil.turnOffFlash();
     }
 
-    public void toggleFlash(){
-        if(isFlashOn()){
+    public void toggleFlash() {
+        if (isFlashOn()) {
             turnOffFlash();
-        }else{
+        } else {
             turnOnFlash();
         }
     }

@@ -30,6 +30,11 @@ public abstract class BaseCameraUtil implements CameraFlashUtility {
     public void setTorchModeCallback(TorchModeCallback torchModeCallback) {
         mTorchModeCallback = torchModeCallback;
     }
+
+    @Override
+    public void refreshPermissions() {
+        //Do Nothing as of now
+    }
     //endregion
 
     //protected methods
@@ -49,14 +54,6 @@ public abstract class BaseCameraUtil implements CameraFlashUtility {
     protected void setTorchMode(TorchMode torchMode) {
         mTorchMode = torchMode;
     }
-
-    /*protected void setTorchModeOn(boolean torchModeOn) {
-        this.torchModeOn = torchModeOn;
-        if (torchModeOn)
-            onCameraTorchModeChanged(TorchMode.SwitchedOn);
-        else
-            onCameraTorchModeChanged(TorchMode.SwitchedOff);
-    }*/
 
     protected boolean isCameraPermissionGranted() {
         return isCameraPermissionGranted;

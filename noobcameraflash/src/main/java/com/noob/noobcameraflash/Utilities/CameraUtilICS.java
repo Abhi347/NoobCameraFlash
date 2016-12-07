@@ -1,6 +1,9 @@
 package com.noob.noobcameraflash.Utilities;
 
+import android.app.Activity;
 import android.hardware.Camera;
+
+import com.noob.lumberjack.LumberJack;
 
 import java.util.List;
 
@@ -8,11 +11,14 @@ import java.util.List;
  * Created by Abhishek on 23-11-2015.
  */
 @SuppressWarnings("deprecation")
-public class CameraUtilICS implements CameraFlashUtility {
+public class CameraUtilICS extends BaseCameraUtil {
     Camera mCamera;
     Camera.Parameters cameraParameters;
-    private boolean torchModeOn = false;
     List<String> flashModes;
+
+    public CameraUtilICS(Activity context) {
+        super(context);
+    }
 
     private String getFlashMode() throws RuntimeException {
         if (mCamera == null)
@@ -22,10 +28,6 @@ public class CameraUtilICS implements CameraFlashUtility {
         return cameraParameters.getFlashMode();
     }
 
-    @Override
-    public boolean isFlashOn() {
-        return torchModeOn;
-    }
 
     @Override
     public void turnOnFlash() throws RuntimeException {
@@ -35,7 +37,7 @@ public class CameraUtilICS implements CameraFlashUtility {
             if (flashModes.contains(Camera.Parameters.FLASH_MODE_TORCH)) {
                 cameraParameters.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
                 mCamera.setParameters(cameraParameters);
-                torchModeOn = true;
+                setTorchMode(TorchMode.SwitchedOn);
             }
         }
     }
@@ -48,20 +50,21 @@ public class CameraUtilICS implements CameraFlashUtility {
             if (flashModes.contains(Camera.Parameters.FLASH_MODE_OFF)) {
                 cameraParameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
                 mCamera.setParameters(cameraParameters);
+                setTorchMode(TorchMode.SwitchedOff);
             } else {
-                //SetLog("FLASH_MODE_OFF not supported");
+                LumberJack.e("FLASH_MODE_OFF not supported");
+                setTorchMode(TorchMode.Unavailable);
             }
         }
-        torchModeOn = false;
+        release();
+    }
+
+    @Override
+    public void release() {
         if (mCamera != null) {
             mCamera.stopPreview();
             mCamera.release();
             mCamera = null;
         }
-    }
-
-    @Override
-    public void refreshPermissions() {
-        //
     }
 }

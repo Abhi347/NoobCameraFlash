@@ -25,23 +25,20 @@ import java.util.List;
 /**
  * Created by Abhishek on 21-11-2015.
  */
+@SuppressWarnings("ConstantConditions")
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-public class CameraUtilLollipop implements CameraFlashUtility {
+public class CameraUtilLollipop extends BaseCameraUtil {
     private CameraCaptureSession mSession;
     private CaptureRequest.Builder mBuilder;
     private CameraDevice mCameraDevice;
     private CameraManager mCameraManager;
 
-    private boolean isCameraPermissionGranted = false;
-    private boolean torchModeOn = false;
-    private Activity mContext;
-
 
     public CameraUtilLollipop(Activity context) {
-        mContext = context;
+        super(context);
         try {
             mCameraManager = (CameraManager) context.getSystemService(Context.CAMERA_SERVICE);
-            openCamera(mContext);
+            openCamera(context);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -49,7 +46,7 @@ public class CameraUtilLollipop implements CameraFlashUtility {
 
     private void openCamera(Activity context) throws CameraAccessException {
         checkCameraPermission(context);
-        if (isCameraPermissionGranted) {
+        if (isCameraPermissionGranted()) {
             mCameraManager.openCamera("0", new CameraDeviceStateCallback(), null);
         }
     }
@@ -57,8 +54,7 @@ public class CameraUtilLollipop implements CameraFlashUtility {
 
     private boolean isFlashAvailable() throws CameraAccessException {
         CameraCharacteristics cameraCharacteristics = mCameraManager.getCameraCharacteristics("0");
-        boolean flashAvailable = cameraCharacteristics.get(CameraCharacteristics.FLASH_INFO_AVAILABLE);
-        return flashAvailable;
+        return cameraCharacteristics.get(CameraCharacteristics.FLASH_INFO_AVAILABLE);
     }
 
     public void checkCameraPermission(Activity context) throws CameraAccessException {
@@ -72,13 +68,8 @@ public class CameraUtilLollipop implements CameraFlashUtility {
                     return;
                 }
             }
-            isCameraPermissionGranted = true;
+            setCameraPermissionGranted(true);
         }
-    }
-
-    @Override
-    public boolean isFlashOn() {
-        return torchModeOn;
     }
 
     @Override
@@ -86,7 +77,7 @@ public class CameraUtilLollipop implements CameraFlashUtility {
         try {
             mBuilder.set(CaptureRequest.FLASH_MODE, CameraMetadata.FLASH_MODE_TORCH);
             mSession.setRepeatingRequest(mBuilder.build(), null, null);
-            torchModeOn = true;
+            setTorchMode(TorchMode.SwitchedOn);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -97,22 +88,13 @@ public class CameraUtilLollipop implements CameraFlashUtility {
         try {
             mBuilder.set(CaptureRequest.FLASH_MODE, CameraMetadata.FLASH_MODE_OFF);
             mSession.setRepeatingRequest(mBuilder.build(), null, null);
-            torchModeOn = false;
+            setTorchMode(TorchMode.SwitchedOff);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    @Override
-    public void refreshPermissions() {
-        try {
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
-
-    class CameraDeviceStateCallback extends CameraDevice.StateCallback {
+    private class CameraDeviceStateCallback extends CameraDevice.StateCallback {
 
         @Override
         public void onOpened(@NonNull CameraDevice camera) {
@@ -187,8 +169,8 @@ public class CameraUtilLollipop implements CameraFlashUtility {
         }
     }
 
-
-    private void close() {
+    @Override
+    public void release() {
         if (mCameraDevice == null || mSession == null) {
             return;
         }
