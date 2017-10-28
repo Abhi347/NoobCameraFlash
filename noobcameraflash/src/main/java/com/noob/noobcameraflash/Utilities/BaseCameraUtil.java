@@ -1,19 +1,12 @@
 package com.noob.noobcameraflash.Utilities;
 
-import android.Manifest;
-import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
-import android.content.pm.PackageManager;
-import android.os.Build;
-import android.support.v4.app.ActivityCompat;
 
 /**
  * Created by Abhishek on 08-12-2016.
  */
 
 public abstract class BaseCameraUtil implements CameraFlashUtility {
-    public static final int CAMERA_PERMISSION_REQUEST_CODE = 1337;
     private Context mContext;
 
     //private boolean torchModeOn = false;
@@ -39,7 +32,7 @@ public abstract class BaseCameraUtil implements CameraFlashUtility {
     //endregion
 
     //protected methods
-    protected void onCameraTorchModeChanged(TorchMode torchMode) {
+    void onCameraTorchModeChanged(TorchMode torchMode) {
         if (mTorchModeCallback != null) {
             mTorchModeCallback.onTorchModeChanged(torchMode);
         }

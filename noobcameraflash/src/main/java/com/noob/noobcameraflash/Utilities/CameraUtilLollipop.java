@@ -103,12 +103,12 @@ public class CameraUtilLollipop extends BaseCameraUtil {
         }
 
         @Override
-        public void onDisconnected(CameraDevice camera) {
+        public void onDisconnected(@NonNull CameraDevice camera) {
 
         }
 
         @Override
-        public void onError(CameraDevice camera, int error) {
+        public void onError(@NonNull CameraDevice camera, int error) {
 
         }
     }
@@ -137,7 +137,7 @@ public class CameraUtilLollipop extends BaseCameraUtil {
     class MyCameraCaptureSessionStateCallback extends CameraCaptureSession.StateCallback {
 
         @Override
-        public void onConfigured(CameraCaptureSession session) {
+        public void onConfigured(@NonNull CameraCaptureSession session) {
             mSession = session;
             try {
                 mSession.setRepeatingRequest(mBuilder.build(), null, null);
@@ -147,7 +147,7 @@ public class CameraUtilLollipop extends BaseCameraUtil {
         }
 
         @Override
-        public void onConfigureFailed(CameraCaptureSession session) {
+        public void onConfigureFailed(@NonNull CameraCaptureSession session) {
 
         }
     }

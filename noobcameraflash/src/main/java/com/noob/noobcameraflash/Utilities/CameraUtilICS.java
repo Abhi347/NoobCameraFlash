@@ -1,6 +1,5 @@
 package com.noob.noobcameraflash.Utilities;
 
-import android.app.Activity;
 import android.content.Context;
 import android.hardware.Camera;
 
