@@ -47,6 +47,10 @@ public class NoobCameraManager {
         init(context, LogLevel.None);
     }
 
+    public void setCameraUtil(CameraFlashUtility cameraUtil) {
+        mCameraUtil = cameraUtil;
+    }
+
     public boolean isFlashOn() {
         return mCameraUtil.isFlashOn();
     }
