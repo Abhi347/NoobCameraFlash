@@ -7,7 +7,6 @@
 An Android library to access Camera Flash in all the versions of Android. It takes care of the permissions and can also work in different flavor of Android OS.
 
 ## Features
- * No need to code for extra permissions
  * Works on all versions of Android (Minimum API level 15)
 
 ## Planned feature
@@ -28,7 +27,7 @@ Step 1. Add the JitPack repository to your build file. Add it in your root build
 Step 2. Add the dependency
 
     dependencies {
-	        compile 'com.github.Abhi347:NoobCameraFlash:0.1.2'
+	        compile 'com.github.Abhi347:NoobCameraFlash:0.2.0'
 	  }
 
 ## Usage
@@ -45,20 +44,17 @@ After that you just need to call the singleton to turn on or off the camera flas
     NoobCameraManager.getInstance().turnOnFlash();
     NoobCameraManager.getInstance().turnOffFlash();
     
-You can take care of the runtime permission to access Camera yourself or can allow the library to do it for you
-
-    NoobCameraManager.getInstance().takePermissions();
-
-Note: The library will take permissions, if you haven't already, even without calling takePermissions() explicitly. This behavior may change in future.
-    
 It's easy to toggle Flash too
 
     NoobCameraManager.getInstance().toggleFlash();
 
 It's a good practice to release all the resources, once you're done.
+
     NoobCameraManager.getInstance().release();
 
 Note: The library doesn't guaranty good resource management yet. So use it with caution.
+
+> You have to take care of the runtime permissions to access Camera yourself, before initializing the NoobCameraManager. In version 0.1.2 or earlier we used to provide support for permissions directly from the library, but due to dependency on the Activity object, we have to remove it.
 
 ## Contributions
 Feel free to report bugs, feedback or even suggest new features. I'd love to make it a great library.
@@ -68,4 +64,3 @@ Feel free to report bugs, feedback or even suggest new features. I'd love to mak
 
 ## Warning
 NoobCameraFlash is not a production ready library (We haven't reached 1.0.0 yet) and thus you should not use it in a production ready code. Please read the license term carefully before including it in your projects.
-
