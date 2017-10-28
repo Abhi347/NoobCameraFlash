@@ -1,7 +1,9 @@
 package com.noob.noobcameraflash.Utilities;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
@@ -12,15 +14,14 @@ import android.support.v4.app.ActivityCompat;
 
 public abstract class BaseCameraUtil implements CameraFlashUtility {
     public static final int CAMERA_PERMISSION_REQUEST_CODE = 1337;
-    private Activity mContext;
-    private boolean isCameraPermissionGranted = false;
+    private Context mContext;
 
     //private boolean torchModeOn = false;
     private TorchMode mTorchMode = TorchMode.None;
     private TorchModeCallback mTorchModeCallback;
 
     //region Constructors
-    public BaseCameraUtil(Activity context) {
+    BaseCameraUtil(Context context) {
         mContext = context;
     }
     //endregion
@@ -35,19 +36,6 @@ public abstract class BaseCameraUtil implements CameraFlashUtility {
     public void setTorchModeCallback(TorchModeCallback torchModeCallback) {
         mTorchModeCallback = torchModeCallback;
     }
-
-    @Override
-    public void takePermissions() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                String permissions[] = {Manifest.permission.CAMERA};
-
-                getContext().requestPermissions(permissions, CAMERA_PERMISSION_REQUEST_CODE);
-                return;
-            }
-        }
-        setCameraPermissionGranted(true);
-    }
     //endregion
 
     //protected methods
@@ -61,7 +49,7 @@ public abstract class BaseCameraUtil implements CameraFlashUtility {
 
     //region Accessors
 
-    public Activity getContext() {
+    Context getContext() {
         return mContext;
     }
 
@@ -69,16 +57,8 @@ public abstract class BaseCameraUtil implements CameraFlashUtility {
         return mTorchMode;
     }
 
-    protected void setTorchMode(TorchMode torchMode) {
+    void setTorchMode(TorchMode torchMode) {
         mTorchMode = torchMode;
-    }
-
-    protected boolean isCameraPermissionGranted() {
-        return isCameraPermissionGranted;
-    }
-
-    protected void setCameraPermissionGranted(boolean cameraPermissionGranted) {
-        isCameraPermissionGranted = cameraPermissionGranted;
     }
     //endregion
 }

@@ -1,7 +1,7 @@
 package com.noob.noobcameraflash.Utilities;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.SurfaceTexture;
 import android.hardware.camera2.CameraAccessException;
@@ -15,6 +15,8 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.util.Size;
 import android.view.Surface;
+
+import com.noob.lumberjack.LumberJack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,22 +33,19 @@ public class CameraUtilLollipop extends BaseCameraUtil {
     private CameraManager mCameraManager;
 
 
-    public CameraUtilLollipop(Activity context) {
+    public CameraUtilLollipop(Context context) throws CameraAccessException, SecurityException {
         super(context);
-        try {
-            openCamera(context);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        openCamera(context);
     }
 
-    private void openCamera(Activity context) throws CameraAccessException {
+    @SuppressLint("MissingPermission")
+    private void openCamera(Context context) throws CameraAccessException, SecurityException {
         if (mCameraManager == null)
-            mCameraManager = (CameraManager) getContext().getSystemService(Context.CAMERA_SERVICE);
-        checkCameraPermission(context);
-        if (isCameraPermissionGranted()) {
-
+            mCameraManager = (CameraManager) context.getSystemService(Context.CAMERA_SERVICE);
+        if (isFlashAvailable()) {
             mCameraManager.openCamera("0", new CameraDeviceStateCallback(), null);
+        } else {
+            LumberJack.e("Camera Permission is not provided");
         }
     }
 
@@ -54,13 +53,6 @@ public class CameraUtilLollipop extends BaseCameraUtil {
     private boolean isFlashAvailable() throws CameraAccessException {
         CameraCharacteristics cameraCharacteristics = mCameraManager.getCameraCharacteristics("0");
         return cameraCharacteristics.get(CameraCharacteristics.FLASH_INFO_AVAILABLE);
-    }
-
-    public void checkCameraPermission(Activity context) throws CameraAccessException {
-        boolean flashAvailable = isFlashAvailable();
-        if (flashAvailable) {
-            takePermissions();
-        }
     }
 
     @Override
@@ -176,7 +168,7 @@ public class CameraUtilLollipop extends BaseCameraUtil {
 
     //region Accessors
 
-    public CameraManager getCameraManager() {
+    private CameraManager getCameraManager() {
         if (mCameraManager == null) {
             try {
                 openCamera(getContext());

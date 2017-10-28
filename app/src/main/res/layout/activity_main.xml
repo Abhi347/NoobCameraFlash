@@ -33,6 +33,12 @@
         android:layout_height="wrap_content"
         android:text="Toggle Flash"/>
 
+    <Button
+        android:onClick="onReleaseClick"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Release"/>
+
     <TextView
         android:id="@+id/status_text"
         android:layout_width="match_parent"

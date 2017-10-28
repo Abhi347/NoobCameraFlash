@@ -1,6 +1,7 @@
 package com.noob.noobcameraflash.Utilities;
 
 import android.app.Activity;
+import android.content.Context;
 import android.hardware.Camera;
 
 import com.noob.lumberjack.LumberJack;
@@ -16,7 +17,7 @@ public class CameraUtilICS extends BaseCameraUtil {
     private Camera.Parameters cameraParameters;
     private List<String> flashModes;
 
-    public CameraUtilICS(Activity context) {
+    public CameraUtilICS(Context context) {
         super(context);
     }
 

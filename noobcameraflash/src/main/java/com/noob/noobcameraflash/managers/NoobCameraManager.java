@@ -1,7 +1,9 @@
 package com.noob.noobcameraflash.managers;
 
-import android.app.Activity;
+import android.content.Context;
+import android.hardware.camera2.CameraAccessException;
 import android.os.Build;
+import android.support.annotation.NonNull;
 
 import com.noob.lumberjack.LogLevel;
 import com.noob.lumberjack.LumberJack;
@@ -30,38 +32,34 @@ public class NoobCameraManager {
     }
     //endregion singleton
 
-    public void init(Activity activity, LogLevel logLevel) {
+    public void init(@NonNull Context context, @NonNull LogLevel logLevel) throws CameraAccessException, SecurityException {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            mCameraUtil = new CameraUtilMarshMallow(activity);
+            mCameraUtil = new CameraUtilMarshMallow(context);
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            mCameraUtil = new CameraUtilLollipop(activity);
+            mCameraUtil = new CameraUtilLollipop(context);
         } else {
-            mCameraUtil = new CameraUtilICS(activity);
+            mCameraUtil = new CameraUtilICS(context);
         }
         setLogLevel(logLevel);
     }
 
-    public void init(Activity activity) {
-        init(activity, LogLevel.None);
-    }
-
-    public void takePermissions() {
-        mCameraUtil.takePermissions();
+    public void init(Context context) throws CameraAccessException, SecurityException {
+        init(context, LogLevel.None);
     }
 
     public boolean isFlashOn() {
         return mCameraUtil.isFlashOn();
     }
 
-    public void turnOnFlash() {
+    public void turnOnFlash() throws CameraAccessException {
         mCameraUtil.turnOnFlash();
     }
 
-    public void turnOffFlash() {
+    public void turnOffFlash() throws CameraAccessException {
         mCameraUtil.turnOffFlash();
     }
 
-    public void toggleFlash() {
+    public void toggleFlash() throws CameraAccessException {
         if (isFlashOn()) {
             turnOffFlash();
         } else {

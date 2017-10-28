@@ -18,21 +18,15 @@ public class CameraUtilMarshMallow extends BaseCameraUtil {
     private CameraManager mCameraManager;
     private CameraManager.TorchCallback mTorchCallback;
 
-    public CameraUtilMarshMallow(Activity context) {
+    public CameraUtilMarshMallow(Context context) throws CameraAccessException {
         super(context);
-        try {
-            openCamera(context);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        openCamera();
     }
 
-    private void openCamera(Activity context) throws CameraAccessException {
+    private void openCamera() throws CameraAccessException {
         if (mCameraManager == null)
             mCameraManager = (CameraManager) getContext().getSystemService(Context.CAMERA_SERVICE);
-        checkCameraPermission(context);
-        if (isCameraPermissionGranted()) {
-
+        if (isFlashAvailable()) {
             mTorchCallback = new CameraManager.TorchCallback() {
                 @Override
                 public void onTorchModeUnavailable(@NonNull String cameraId) {
@@ -58,43 +52,27 @@ public class CameraUtilMarshMallow extends BaseCameraUtil {
         return cameraCharacteristics.get(CameraCharacteristics.FLASH_INFO_AVAILABLE);
     }
 
-    public void checkCameraPermission(Activity context) throws CameraAccessException {
-        boolean flashAvailable = isFlashAvailable();
-        if (flashAvailable) {
-            takePermissions();
-        }
-    }
-
-
     @Override
-    public void turnOnFlash() {
-        try {
-            String[] cameraIds = getCameraManager().getCameraIdList();
-            for (String id : cameraIds) {
-                CameraCharacteristics characteristics = getCameraManager().getCameraCharacteristics(id);
-                if (characteristics.get(CameraCharacteristics.FLASH_INFO_AVAILABLE)) {
-                    getCameraManager().setTorchMode(id, true);
-                    setTorchMode(TorchMode.SwitchedOn);
-                }
+    public void turnOnFlash() throws CameraAccessException {
+        String[] cameraIds = getCameraManager().getCameraIdList();
+        for (String id : cameraIds) {
+            CameraCharacteristics characteristics = getCameraManager().getCameraCharacteristics(id);
+            if (characteristics.get(CameraCharacteristics.FLASH_INFO_AVAILABLE)) {
+                getCameraManager().setTorchMode(id, true);
+                setTorchMode(TorchMode.SwitchedOn);
             }
-        } catch (CameraAccessException e) {
-            e.printStackTrace();
         }
     }
 
     @Override
-    public void turnOffFlash() {
-        try {
-            String[] cameraIds = getCameraManager().getCameraIdList();
-            for (String id : cameraIds) {
-                CameraCharacteristics characteristics = getCameraManager().getCameraCharacteristics(id);
-                if (characteristics.get(CameraCharacteristics.FLASH_INFO_AVAILABLE)) {
-                    getCameraManager().setTorchMode(id, false);
-                    setTorchMode(TorchMode.SwitchedOff);
-                }
+    public void turnOffFlash() throws CameraAccessException {
+        String[] cameraIds = getCameraManager().getCameraIdList();
+        for (String id : cameraIds) {
+            CameraCharacteristics characteristics = getCameraManager().getCameraCharacteristics(id);
+            if (characteristics.get(CameraCharacteristics.FLASH_INFO_AVAILABLE)) {
+                getCameraManager().setTorchMode(id, false);
+                setTorchMode(TorchMode.SwitchedOff);
             }
-        } catch (CameraAccessException e) {
-            e.printStackTrace();
         }
     }
 
@@ -108,13 +86,9 @@ public class CameraUtilMarshMallow extends BaseCameraUtil {
 
     //region Accessors
 
-    public CameraManager getCameraManager() {
+    private CameraManager getCameraManager() throws CameraAccessException {
         if (mCameraManager == null) {
-            try {
-                openCamera(getContext());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            openCamera();
         }
         return mCameraManager;
     }
