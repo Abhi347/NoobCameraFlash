@@ -38,6 +38,7 @@ public class CameraUtilICS extends BaseCameraUtil {
                 cameraParameters.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
                 mCamera.setParameters(cameraParameters);
                 setTorchMode(TorchMode.SwitchedOn);
+                mCamera.startPreview(); // 23.02.2017 Roberto
             }
         }
     }
@@ -51,6 +52,7 @@ public class CameraUtilICS extends BaseCameraUtil {
                 cameraParameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
                 mCamera.setParameters(cameraParameters);
                 setTorchMode(TorchMode.SwitchedOff);
+                mCamera.stopPreview(); // 23.02.2017 Roberto
             } else {
                 LumberJack.e("FLASH_MODE_OFF not supported");
                 setTorchMode(TorchMode.Unavailable);
